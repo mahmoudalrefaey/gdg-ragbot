@@ -1,0 +1,38 @@
+Title: Introduction to Retrieval-Augmented Generation (RAG)
+
+Retrieval-Augmented Generation, commonly known as RAG, is a technique that combines information retrieval with text generation. Instead of relying solely on a language model's training data, RAG fetches relevant documents from an external knowledge base and uses them as context when generating an answer. This significantly reduces hallucination because the model is grounded in actual source material.
+
+RAG was first introduced in a 2020 paper by Facebook AI Research (now Meta AI). The key insight is that large language models (LLMs) can "hallucinate" — they produce confident-sounding answers that are factually wrong. By giving the model real documents to reference, we dramatically improve accuracy.
+
+How RAG Works — Step by Step:
+1. The user asks a question.
+2. The question is converted into a numerical vector (called an "embedding") using a model like SentenceTransformers.
+3. This vector is compared against pre-computed vectors of document chunks stored in a vector database such as FAISS.
+4. The most similar chunks are retrieved (typically the top 3-5).
+5. These chunks, along with the original question, are sent to a language model.
+6. The language model generates an answer grounded in the retrieved context.
+
+What are Embeddings?
+An embedding is a list of numbers (a vector) that captures the meaning of a piece of text. Similar texts produce similar vectors. For example, "How old are you?" and "What is your age?" would have very close embeddings, even though they use different words. Models like "all-MiniLM-L6-v2" from SentenceTransformers are popular because they are small, fast, and produce good-quality embeddings.
+
+What is a Vector Store?
+A vector store (or vector database) is a specialized database designed to store and search high-dimensional vectors efficiently. FAISS (Facebook AI Similarity Search) is one of the most popular open-source vector stores. It uses algorithms like HNSW and IVF to find the nearest neighbors of a query vector in milliseconds, even with millions of stored vectors.
+
+Why Chunking Matters:
+Documents are often too long to fit into a single embedding or an LLM's context window. We split documents into smaller pieces called "chunks." Typical chunk sizes range from 200 to 1000 characters. We add overlap between consecutive chunks (e.g., 100 characters) so that important sentences at chunk boundaries are not lost. Without overlap, a key sentence that spans two chunks would be split and possibly missed during retrieval.
+
+Limitations and Hallucination Risks:
+Even with RAG, hallucination can still occur if:
+- The retrieved chunks don't contain the answer (retrieval failure).
+- The LLM ignores the provided context and generates from its training data.
+- The chunks are too short or too noisy, confusing the model.
+- The knowledge base itself contains outdated or incorrect information.
+
+Best Practices:
+- Keep your knowledge base clean and up to date.
+- Experiment with chunk size and overlap to find what works best for your domain.
+- Always show sources/citations to the user so they can verify the answer.
+- Use a system prompt that instructs the LLM to stick to the provided context.
+
+GDG (Google Developer Groups) Session Info:
+This project was built for a GDG hands-on session to teach students how RAG works from scratch, without relying on heavy frameworks like LangChain. The goal is to understand every step: loading documents, chunking, embedding, indexing, retrieval, prompt building, and generation.

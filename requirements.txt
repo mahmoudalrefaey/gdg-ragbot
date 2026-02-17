@@ -1,0 +1,4 @@
+# RAG Chatbot — install: pip install -r requirements.txt
+streamlit
+sentence-transformers
+chromadb
