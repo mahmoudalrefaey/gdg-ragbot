@@ -95,4 +95,4 @@ So the answer is grounded in your documents instead of the model’s training da
 - **Streamlit** — chat UI
 - **Chroma** — vector database (persists in `chroma_db/`)
 - **SentenceTransformers** — embeddings (`all-MiniLM-L6-v2`)
-- **Ollama** — local LLM (llama3); called via `urllib`, no extra HTTP library
+- **Ollama** — local LLM (llama3); called via `urllib`
